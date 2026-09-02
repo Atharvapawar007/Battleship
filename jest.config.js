@@ -1,16 +1,11 @@
-module.exports = {
+export default {
     testEnvironment: "node",
 
     transform: {
         "^.+\\.js$": "babel-jest",
     },
 
-    testMatch: [
-        "**/tests/**/*.test.js",
-    ],
+    testMatch: ["**/tests/**/*.test.js"],
 
-    collectCoverageFrom: [
-        "src/**/*.js",
-        "!src/index.js",
-    ],
+    collectCoverageFrom: ["src/**/*.js", "!src/index.js"],
 };

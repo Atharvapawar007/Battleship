@@ -1,7 +1,7 @@
-const eslint = require("@eslint/js");
-const globals = require("globals");
+import eslint from "@eslint/js";
+import globals from "globals";
 
-module.exports = [
+export default [
     eslint.configs.recommended,
 
     {
@@ -16,18 +16,5 @@ module.exports = [
                 ...globals.jest,
             },
         },
-
-        rules: {
-            "no-unused-vars": "warn",
-            "no-console": "warn",
-        },
-    },
-
-    {
-        ignores: [
-            "dist/",
-            "node_modules/",
-            "coverage/",
-        ],
     },
 ];
