@@ -1,5 +1,6 @@
 function Ship(length) {
     let hits = 0;
+    const coordinates = [];
 
     function isSunk() {
         if (hits === length) {
@@ -12,6 +13,10 @@ function Ship(length) {
         hits++;
     }
 
+    function addCoordinates(cell){
+        coordinates.push(cell);
+    }
+
     return {
         get length() {
             return length;
@@ -19,8 +24,12 @@ function Ship(length) {
         get hits() {
             return hits;
         },
+        get coordinates(){
+            return coordinates;
+        },
         isSunk,
         hit,
+        addCoordinates
     };
 }
 
