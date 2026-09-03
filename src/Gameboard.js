@@ -10,6 +10,32 @@ function Gameboard() {
 
         board.push(row);
     }
+
+    //ships
+    const ships = [];
+
+    function placeShip(ship, start, orientation){
+        const length = ship.length;
+        const [x, y] = start;
+
+        if(orientation === "horizontal"){
+            for(let j = y; j < y + length; j++){
+                board[x][j] = 1;
+            }
+        }else{
+            for(let i = x; i < x + length; i++){
+                board[i][y] = 1;
+            }
+        }
+
+        ships.push(ship);
+    }
+
+    return {
+        get ships(){
+            return ships;
+        }
+    }
 }
 
 export default Gameboard;
