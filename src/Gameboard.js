@@ -21,10 +21,12 @@ function Gameboard() {
         if(orientation === "horizontal"){
             for(let j = y; j < y + length; j++){
                 board[x][j] = 1;
+                ship.addCoordinates([x, j]);
             }
         }else{
             for(let i = x; i < x + length; i++){
                 board[i][y] = 1;
+                ship.addCoordinates([i, y]);
             }
         }
 
