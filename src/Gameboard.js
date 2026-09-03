@@ -34,7 +34,8 @@ function Gameboard() {
     return {
         get ships(){
             return ships;
-        }
+        },
+        placeShip
     }
 }
 
