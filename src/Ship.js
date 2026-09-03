@@ -1,27 +1,27 @@
-function Ship(length){
+function Ship(length) {
     let hits = 0;
 
-    function isSunk(){
-        if(hits === length){
+    function isSunk() {
+        if (hits === length) {
             return true;
         }
         return false;
     }
 
-    function hit(){
+    function hit() {
         hits++;
     }
 
     return {
-        get length(){
+        get length() {
             return length;
         },
-        get hits(){
-            return hits
+        get hits() {
+            return hits;
         },
         isSunk,
-        hit
-    }
+        hit,
+    };
 }
 
 export default Ship;
