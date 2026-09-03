@@ -71,7 +71,7 @@ describe("Gameboard", () => {
     });
 
     describe("allShipsSunk()", () => {
-        test.skip("returns false when at least one ship is not sunk", () => {
+        test("returns false when at least one ship is not sunk", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
@@ -83,7 +83,7 @@ describe("Gameboard", () => {
             expect(gameboard.allShipsSunk()).toBe(false);
         });
 
-        test.skip("returns true when all ships are sunk", () => {
+        test("returns true when all ships are sunk", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
