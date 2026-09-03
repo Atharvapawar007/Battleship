@@ -10,7 +10,7 @@ describe("Gameboard", () => {
     });
 
     describe("placeShip()", () => {
-        test.skip("places a ship on the gameboard", () => {
+        test("places a ship on the gameboard", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
@@ -19,7 +19,7 @@ describe("Gameboard", () => {
             expect(gameboard.ships).toContain(ship);
         });
 
-        test.skip("places a horizontal ship on the correct coordinates", () => {
+        test("places a horizontal ship on the correct coordinates", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
@@ -32,7 +32,7 @@ describe("Gameboard", () => {
             ]);
         });
 
-        test.skip("places a vertical ship on the correct coordinates", () => {
+        test("places a vertical ship on the correct coordinates", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
