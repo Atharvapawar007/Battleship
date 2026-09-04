@@ -44,6 +44,39 @@ describe("Gameboard", () => {
                 [4, 3],
             ]);
         });
+
+        // New edge-case tests
+
+        test("does not allow a horizontal ship to extend outside the board", () => {
+            const gameboard = Gameboard();
+            const ship = Ship(3);
+
+            expect(() => {
+                gameboard.placeShip(ship, [2, 8], "horizontal");
+            }).toThrow();
+        });
+
+        test("does not allow a vertical ship to extend outside the board", () => {
+            const gameboard = Gameboard();
+            const ship = Ship(3);
+
+            expect(() => {
+                gameboard.placeShip(ship, [8, 2], "vertical");
+            }).toThrow();
+        });
+
+        test("does not allow ships to overlap", () => {
+            const gameboard = Gameboard();
+
+            const ship1 = Ship(3);
+            const ship2 = Ship(3);
+
+            gameboard.placeShip(ship1, [2, 3], "horizontal");
+
+            expect(() => {
+                gameboard.placeShip(ship2, [2, 4], "horizontal");
+            }).toThrow();
+        });
     });
 
     describe("receiveAttack()", () => {
@@ -67,6 +100,40 @@ describe("Gameboard", () => {
             gameboard.receiveAttack([5, 5]);
 
             expect(gameboard.missedAttacks).toContainEqual([5, 5]);
+        });
+
+        // New edge-case tests
+
+        test.skip("does not count the same ship coordinate as a hit more than once", () => {
+            const gameboard = Gameboard();
+            const ship = Ship(3);
+
+            gameboard.placeShip(ship, [2, 3], "horizontal");
+
+            gameboard.receiveAttack([2, 4]);
+            gameboard.receiveAttack([2, 4]);
+
+            expect(ship.hits).toBe(1);
+        });
+
+        test.skip("does not record the same missed attack more than once", () => {
+            const gameboard = Gameboard();
+            const ship = Ship(3);
+
+            gameboard.placeShip(ship, [2, 3], "horizontal");
+
+            gameboard.receiveAttack([5, 5]);
+            gameboard.receiveAttack([5, 5]);
+
+            expect(gameboard.missedAttacks).toEqual([[5, 5]]);
+        });
+
+        test.skip("does not allow an attack outside the board", () => {
+            const gameboard = Gameboard();
+
+            expect(() => {
+                gameboard.receiveAttack([10, 10]);
+            }).toThrow();
         });
     });
 
