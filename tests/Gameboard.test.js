@@ -104,7 +104,7 @@ describe("Gameboard", () => {
 
         // New edge-case tests
 
-        test.skip("does not count the same ship coordinate as a hit more than once", () => {
+        test("does not count the same ship coordinate as a hit more than once", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
@@ -116,7 +116,7 @@ describe("Gameboard", () => {
             expect(ship.hits).toBe(1);
         });
 
-        test.skip("does not record the same missed attack more than once", () => {
+        test("does not record the same missed attack more than once", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
@@ -128,7 +128,7 @@ describe("Gameboard", () => {
             expect(gameboard.missedAttacks).toEqual([[5, 5]]);
         });
 
-        test.skip("does not allow an attack outside the board", () => {
+        test("does not allow an attack outside the board", () => {
             const gameboard = Gameboard();
 
             expect(() => {
