@@ -1,3 +1,5 @@
+import Ship from "./Ship";
+
 function Gameboard() {
     //board simulator
     const board = [];
@@ -16,6 +18,9 @@ function Gameboard() {
 
     //map to trace from coordinates to a ship
     const map = new Map();
+
+    //missedAttacks array to keep track of attacks over empty cells
+    const missedAttacks = [];
 
     function placeShip(ship, start, orientation){
         const length = ship.length;
@@ -48,12 +53,28 @@ function Gameboard() {
         return true;
     }
 
+    function receiveAttack(cell){
+        const ship = map.get(`${cell}`);
+        const [x, y] = cell;
+        if(ship === undefined){
+            missedAttacks.push(cell);
+            board[x][y] = -1;
+        }else if(board[x][y] === 1){
+            ship.hit();
+            board[x][y] = 2;
+        }
+    }
+
     return {
         get ships(){
             return ships;
         },
+        get missedAttacks(){
+            return missedAttacks;
+        },
         placeShip,
-        allShipsSunk
+        allShipsSunk,
+        receiveAttack
     }
 }
 
