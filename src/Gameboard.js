@@ -26,6 +26,10 @@ function Gameboard() {
         const length = ship.length;
         const [x, y] = start;
 
+        if(!isValidPlacement(length, start, orientation)){
+            throw new Error("cannot place ship outside of board");
+        }
+
         if(orientation === "horizontal"){
             for(let j = y; j < y + length; j++){
                 board[x][j] = 1;
@@ -41,7 +45,33 @@ function Gameboard() {
         }
 
         ships.push(ship);
+    }
 
+    function isValidPlacement(length, start, orientation){
+        const [x, y] = start;
+
+        if(orientation === "horizontal"){
+            for(let j = y; j < y + length; j++){
+                if(!insideBoard(x, j) || board[x][j] === 1){
+                    return false;
+                }
+            }
+        }else{
+            for(let i = x; i < x + length; i++){
+                if(!insideBoard(i, y) || board[i][y] === 1){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    function insideBoard(i, j){
+        if(i < 0 || i >= 10) return false;
+        if(j < 0 || j >= 10) return false;
+
+        return true;
     }
 
     function allShipsSunk(){
