@@ -86,7 +86,12 @@ function Gameboard() {
     function receiveAttack(cell){
         const ship = map.get(`${cell}`);
         const [x, y] = cell;
-        if(ship === undefined){
+
+        if(!insideBoard(x, y)){
+            throw new Error("Cannot place an attack out of the board")
+        }
+        
+        if(ship === undefined && board[x][y] === 0){
             missedAttacks.push(cell);
             board[x][y] = -1;
         }else if(board[x][y] === 1){
