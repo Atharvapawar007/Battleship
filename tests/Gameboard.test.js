@@ -2,7 +2,7 @@ import Gameboard from "../src/Gameboard.js";
 import Ship from "../src/Ship.js";
 
 describe("Gameboard", () => {
-    test.skip("creates an empty gameboard", () => {
+    test("creates an empty gameboard", () => {
         const gameboard = Gameboard();
 
         expect(gameboard.ships).toEqual([]);
@@ -47,7 +47,7 @@ describe("Gameboard", () => {
     });
 
     describe("receiveAttack()", () => {
-        test.skip("hits a ship when an occupied coordinate is attacked", () => {
+        test("hits a ship when an occupied coordinate is attacked", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
@@ -58,7 +58,7 @@ describe("Gameboard", () => {
             expect(ship.hits).toBe(1);
         });
 
-        test.skip("records a missed attack", () => {
+        test("records a missed attack", () => {
             const gameboard = Gameboard();
             const ship = Ship(3);
 
