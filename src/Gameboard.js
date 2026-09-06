@@ -1,5 +1,3 @@
-import Ship from "./Ship";
-
 function Gameboard() {
     //board simulator
     const board = [];
@@ -27,7 +25,7 @@ function Gameboard() {
         const [x, y] = start;
 
         if (!isValidPlacement(length, start, orientation)) {
-            throw new Error("cannot place ship outside of board");
+            throw new Error("Invalid placement");
         }
 
         if (orientation === "horizontal") {
