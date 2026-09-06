@@ -13,7 +13,7 @@ function Ship(length) {
         hits++;
     }
 
-    function addCoordinates(cell){
+    function addCoordinates(cell) {
         coordinates.push(cell);
     }
 
@@ -24,12 +24,12 @@ function Ship(length) {
         get hits() {
             return hits;
         },
-        get coordinates(){
+        get coordinates() {
             return coordinates;
         },
         isSunk,
         hit,
-        addCoordinates
+        addCoordinates,
     };
 }
 
