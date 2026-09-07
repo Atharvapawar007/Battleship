@@ -102,6 +102,10 @@ function Gameboard() {
         }
     }
 
+    function getBoard() {
+        structuredClone(board);
+    }
+
     return {
         get ships() {
             return ships;
@@ -112,6 +116,7 @@ function Gameboard() {
         placeShip,
         allShipsSunk,
         receiveAttack,
+        getBoard,
     };
 }
 
