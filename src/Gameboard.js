@@ -103,7 +103,7 @@ function Gameboard() {
     }
 
     function getBoard() {
-        structuredClone(board);
+        return structuredClone(board);
     }
 
     return {
