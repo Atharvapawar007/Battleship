@@ -27,7 +27,7 @@ function Gameboard() {
             throw new Error("Invalid placement");
         }
 
-        const ship = Ship();
+        const ship = Ship(length);
         const [x, y] = start;
 
         if (orientation === "horizontal") {
