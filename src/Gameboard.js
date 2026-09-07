@@ -1,3 +1,5 @@
+import Ship from "./Ship";
+
 function Gameboard() {
     //board simulator
     const board = [];
@@ -20,13 +22,13 @@ function Gameboard() {
     //missedAttacks array to keep track of attacks over empty cells
     const missedAttacks = [];
 
-    function placeShip(ship, start, orientation) {
-        const length = ship.length;
-        const [x, y] = start;
-
+    function placeShip(length, start, orientation) {
         if (!isValidPlacement(length, start, orientation)) {
             throw new Error("Invalid placement");
         }
+
+        const ship = Ship();
+        const [x, y] = start;
 
         if (orientation === "horizontal") {
             for (let j = y; j < y + length; j++) {
@@ -95,6 +97,8 @@ function Gameboard() {
         } else if (board[x][y] === 1) {
             ship.hit();
             board[x][y] = 2;
+        } else {
+            throw new Error("already attacked...cell please try again");
         }
     }
 
