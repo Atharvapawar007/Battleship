@@ -1,5 +1,4 @@
 import Gameboard from "../src/Gameboard.js";
-import Ship from "../src/Ship.js";
 
 describe("Gameboard", () => {
     test("creates an empty gameboard", () => {
@@ -12,18 +11,16 @@ describe("Gameboard", () => {
     describe("placeShip()", () => {
         test("places a ship on the gameboard", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
 
-            expect(gameboard.ships).toContain(ship);
+            expect(gameboard.ships).toHaveLength(1);
         });
 
         test("places a horizontal ship on the correct coordinates", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
 
             expect(gameboard.ships[0].coordinates).toEqual([
                 [2, 3],
@@ -34,9 +31,8 @@ describe("Gameboard", () => {
 
         test("places a vertical ship on the correct coordinates", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "vertical");
+            gameboard.placeShip(3, [2, 3], "vertical");
 
             expect(gameboard.ships[0].coordinates).toEqual([
                 [2, 3],
@@ -45,36 +41,29 @@ describe("Gameboard", () => {
             ]);
         });
 
-        // New edge-case tests
-
         test("does not allow a horizontal ship to extend outside the board", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
             expect(() => {
-                gameboard.placeShip(ship, [2, 8], "horizontal");
+                gameboard.placeShip(3, [2, 8], "horizontal");
             }).toThrow();
         });
 
         test("does not allow a vertical ship to extend outside the board", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
             expect(() => {
-                gameboard.placeShip(ship, [8, 2], "vertical");
+                gameboard.placeShip(3, [8, 2], "vertical");
             }).toThrow();
         });
 
         test("does not allow ships to overlap", () => {
             const gameboard = Gameboard();
 
-            const ship1 = Ship(3);
-            const ship2 = Ship(3);
-
-            gameboard.placeShip(ship1, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
 
             expect(() => {
-                gameboard.placeShip(ship2, [2, 4], "horizontal");
+                gameboard.placeShip(3, [2, 4], "horizontal");
             }).toThrow();
         });
     });
@@ -82,50 +71,46 @@ describe("Gameboard", () => {
     describe("receiveAttack()", () => {
         test("hits a ship when an occupied coordinate is attacked", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
 
             gameboard.receiveAttack([2, 4]);
 
-            expect(ship.hits).toBe(1);
+            expect(gameboard.ships[0].hits).toBe(1);
         });
 
         test("records a missed attack", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
 
             gameboard.receiveAttack([5, 5]);
 
             expect(gameboard.missedAttacks).toContainEqual([5, 5]);
         });
 
-        // New edge-case tests
-
-        test("does not count the same ship coordinate as a hit more than once", () => {
+        test("throws an error when attacking an already hit cell", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
 
             gameboard.receiveAttack([2, 4]);
-            gameboard.receiveAttack([2, 4]);
 
-            expect(ship.hits).toBe(1);
+            expect(() => {
+                gameboard.receiveAttack([2, 4]);
+            }).toThrow();
         });
 
-        test("does not record the same missed attack more than once", () => {
+        test("throws an error when attacking an already missed cell", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
 
             gameboard.receiveAttack([5, 5]);
-            gameboard.receiveAttack([5, 5]);
 
-            expect(gameboard.missedAttacks).toEqual([[5, 5]]);
+            expect(() => {
+                gameboard.receiveAttack([5, 5]);
+            }).toThrow();
         });
 
         test("does not allow an attack outside the board", () => {
@@ -140,9 +125,10 @@ describe("Gameboard", () => {
     describe("allShipsSunk()", () => {
         test("returns false when at least one ship is not sunk", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
+
+            const ship = gameboard.ships[0];
 
             ship.hit();
             ship.hit();
@@ -152,9 +138,10 @@ describe("Gameboard", () => {
 
         test("returns true when all ships are sunk", () => {
             const gameboard = Gameboard();
-            const ship = Ship(3);
 
-            gameboard.placeShip(ship, [2, 3], "horizontal");
+            gameboard.placeShip(3, [2, 3], "horizontal");
+
+            const ship = gameboard.ships[0];
 
             ship.hit();
             ship.hit();
