@@ -1,3 +1,5 @@
 import "./style.css";
+import DisplayController from "./DisplayController";
 
-console.log("Battleship loaded!");
+const displayController = DisplayController();
+displayController.addEventListeners();

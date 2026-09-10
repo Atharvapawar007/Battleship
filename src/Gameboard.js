@@ -52,13 +52,13 @@ function Gameboard() {
 
         if (orientation === "horizontal") {
             for (let j = y; j < y + length; j++) {
-                if (!insideBoard(x, j) || board[x][j] === 1) {
+                if (!isInsideBoard(x, j) || board[x][j] === 1) {
                     return false;
                 }
             }
         } else {
             for (let i = x; i < x + length; i++) {
-                if (!insideBoard(i, y) || board[i][y] === 1) {
+                if (!isInsideBoard(i, y) || board[i][y] === 1) {
                     return false;
                 }
             }
@@ -67,7 +67,7 @@ function Gameboard() {
         return true;
     }
 
-    function insideBoard(i, j) {
+    function isInsideBoard(i, j) {
         if (i < 0 || i >= 10) return false;
         if (j < 0 || j >= 10) return false;
 
@@ -84,22 +84,30 @@ function Gameboard() {
     }
 
     function receiveAttack(cell) {
-        const ship = map.get(`${cell}`);
         const [x, y] = cell;
 
-        if (!insideBoard(x, y)) {
-            throw new Error("Cannot place an attack out of the board");
+        if (!isInsideBoard(x, y)) {
+            throw new Error(
+                `Invalid attack: [${x}, ${y}] is outside the gameboard.`
+            );
         }
 
-        if (ship === undefined && board[x][y] === 0) {
+        if (board[x][y] === -1 || board[x][y] === 2) {
+            throw new Error(
+                `Invalid attack: [${x}, ${y}] has already been attacked.`
+            );
+        }
+
+        const ship = map.get(`${cell}`);
+
+        if (ship === undefined) {
             missedAttacks.push(cell);
             board[x][y] = -1;
-        } else if (board[x][y] === 1) {
-            ship.hit();
-            board[x][y] = 2;
-        } else {
-            throw new Error("already attacked...cell please try again");
+            return;
         }
+
+        ship.hit();
+        board[x][y] = 2;
     }
 
     function getBoard() {
