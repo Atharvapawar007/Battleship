@@ -185,17 +185,17 @@ function DisplayController() {
     }
 
     function renderFrontendBoard(cells, boardCopy) {
-        cells.forEach(cell => {
+        cells.forEach((cell) => {
             const x = Number(cell.dataset.row);
             const y = Number(cell.dataset.column);
             const status = boardCopy[x][y];
 
             if (status === 2) {
-                cell.classList.add('hit');
+                cell.classList.add("hit");
             } else if (status === -1) {
-                cell.classList.add('miss');
+                cell.classList.add("miss");
             }
-        })
+        });
     }
 
     function updateCurrentPlayer() {
@@ -216,8 +216,8 @@ function DisplayController() {
     }
 
     return {
-        startGame
-    }
+        startGame,
+    };
 }
 
 export default DisplayController;

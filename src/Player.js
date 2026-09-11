@@ -26,7 +26,7 @@ function Player(name) {
         assignBoard,
         playMove,
         getBoardCopy,
-        hasWon
+        hasWon,
     };
 }
 
