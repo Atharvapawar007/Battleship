@@ -1,7 +1,7 @@
 function GameController(player1, player2) {
     let currentPlayer = player1;
 
-    function shiftChance() {
+    function shiftTurn() {
         if (currentPlayer === player1) {
             currentPlayer = player2;
         } else {
@@ -20,7 +20,7 @@ function GameController(player1, player2) {
     return {
         getCurrentPlayer,
         playRound,
-        shiftChance,
+        shiftTurn,
     };
 }
 

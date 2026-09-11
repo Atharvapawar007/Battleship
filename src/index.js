@@ -1,5 +1,5 @@
 import "./style.css";
-import DisplayController from "./DisplayController";
+import DisplayController from "./DisplayController.js";
 
 const displayController = DisplayController();
-displayController.addEventListeners();
+displayController.startGame();

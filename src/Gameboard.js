@@ -1,4 +1,4 @@
-import Ship from "./Ship";
+import Ship from "./Ship.js";
 
 function Gameboard() {
     //board simulator
@@ -87,15 +87,11 @@ function Gameboard() {
         const [x, y] = cell;
 
         if (!isInsideBoard(x, y)) {
-            throw new Error(
-                `Invalid attack: [${x}, ${y}] is outside the gameboard.`
-            );
+            throw new Error(`Invalid attack: [${x}, ${y}] is outside the gameboard.`);
         }
 
         if (board[x][y] === -1 || board[x][y] === 2) {
-            throw new Error(
-                `Invalid attack: [${x}, ${y}] has already been attacked.`
-            );
+            throw new Error(`Invalid attack: [${x}, ${y}] has already been attacked.`);
         }
 
         const ship = map.get(`${cell}`);

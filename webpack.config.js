@@ -18,7 +18,7 @@ export default {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.html",
+            template: "./src/template.html",
         }),
     ],
 };

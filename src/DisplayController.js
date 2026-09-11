@@ -1,24 +1,31 @@
-import GameController from "./GameController";
-import Gameboard from "./Gameboard";
-import Player from "./Player";
+import GameController from "./GameController.js";
+import Gameboard from "./Gameboard.js";
+import Player from "./Player.js";
 
 function DisplayController() {
+    const shipPlacementModal = document.querySelector("#battleship-details-modal");
+    const playerCreationModal = document.querySelector("#start-modal");
     const playerCreationForm = document.querySelector("#start-modal form");
+    const shipCreationForm = document.querySelector("#battleship-details-modal form");
 
-    const gameboard1Frontend = document.querySelector("#gameboard1");
-    const gameboard2Frontend = document.querySelector("#gameboard2");
+    const cellsG1 = document.querySelectorAll("#gameboard1 .cell");
+    const cellsG2 = document.querySelectorAll("#gameboard2 .cell");
 
-    const gameboard1Backend = Gameboard();
-    const gameboard2Backend = Gameboard();
+    const gameboard1 = Gameboard();
+    const gameboard2 = Gameboard();
 
     let player1 = null;
     let player2 = null;
     let gameController = null;
 
+    let currentPlayer = null;
+    const currentPlayerName = document.querySelector("#current-player");
+
     playerCreationForm.addEventListener("submit", handlePlayerCreation);
 
     function handlePlayerCreation(event) {
         event.preventDefault();
+        playerCreationModal.close();
 
         const player1Name = document.querySelector("#player1-name").value;
         const player2Name = document.querySelector("#player2-name").value;
@@ -32,8 +39,7 @@ function DisplayController() {
     }
 
     function placeShips(player) {
-        const opponentBoard = getOpponentBoard(player);
-
+        shipCreationForm.addEventListener("submit", handleShipPlacement);
         const ships = getShips();
 
         const shipList = Object.entries(ships);
@@ -51,15 +57,16 @@ function DisplayController() {
             event.preventDefault();
 
             const shipDetails = getShipDetails();
-            const gameboard = getPlayerGameboard(player);
+            const gameboard = getOpponentGameboard(player);
 
             try {
                 gameboard.placeShip(
                     shipDetails.length,
                     shipDetails.coordinates,
-                    shipDetails.orientation
+                    shipDetails.orientation,
                 );
 
+                shipPlacementModal.close();
                 currentShipIndex++;
 
                 if (currentShipIndex < shipList.length) {
@@ -71,16 +78,6 @@ function DisplayController() {
                 showError(e.message);
             }
         }
-
-        const shipCreationForm = document.querySelector(
-            "#battleship-details-modal form"
-        );
-
-        shipCreationForm.addEventListener(
-            "submit",
-            handleShipPlacement,
-            { once: true }
-        );
     }
 
     function getShips() {
@@ -94,7 +91,8 @@ function DisplayController() {
     }
 
     function showShipDetails(player, shipName, length) {
-        const modal = document.querySelector("#battleship-details-modal");
+        shipPlacementModal.showModal();
+
         const playerName = document.querySelector("#entry-player-name");
         const shipNameInput = document.querySelector("#ship-name");
         const shipLengthInput = document.querySelector("#ship-length");
@@ -102,53 +100,31 @@ function DisplayController() {
         playerName.textContent = player.name;
         shipNameInput.value = shipName;
         shipLengthInput.value = length;
-
-        modal.showModal();
     }
 
     function getShipDetails() {
         const length = document.querySelector("#ship-length").value;
-
         const xCoordinate = document.querySelector("#ship-start-x").value;
-
         const yCoordinate = document.querySelector("#ship-start-y").value;
-
-        const orientation = document.querySelector(
-            'input[name="orientation"]:checked'
-        ).value;
+        const orientation = document.querySelector('input[name="orientation"]:checked').value;
 
         return {
             length: Number(length),
-            coordinates: [
-                Number(xCoordinate),
-                Number(yCoordinate)
-            ],
-            orientation: orientation
+            coordinates: [Number(xCoordinate), Number(yCoordinate)],
+            orientation: orientation,
         };
     }
 
-    function getPlayerGameboard(player) {
-        return player === player1
-            ? gameboard1Backend
-            : gameboard2Backend;
+    function getOpponentGameboard(player) {
+        return player === player1 ? gameboard2 : gameboard1;
     }
 
-    function getFrontendBoard(player) {
-        return player === player1
-            ? gameboard1Frontend
-            : gameboard2Frontend;
-    }
-
-    function getOpponentBoard(player) {
-        return player === player1
-            ? gameboard2Frontend
-            : gameboard1Frontend;
+    function getFrontendCells(player) {
+        return player === player1 ? cellsG1 : cellsG2;
     }
 
     function finishShipPlacement(player) {
-        const modal = document.querySelector("#battleship-details-modal");
-
-        modal.close();
+        shipPlacementModal.close();
 
         if (player === player1) {
             placeShips(player2);
@@ -158,10 +134,10 @@ function DisplayController() {
     }
 
     function showError(errorMessage) {
-        const errorModal = document.querySelector('#error-modal');
+        const errorModal = document.querySelector("#error-modal");
         errorModal.showModal();
 
-        const errorMessageField = document.querySelector('#error-modal p');
+        const errorMessageField = document.querySelector("#error-modal p");
         errorMessageField.textContent = errorMessage;
 
         setTimeout(() => {
@@ -170,13 +146,77 @@ function DisplayController() {
     }
 
     function assignGameboards() {
-        player1.assignBoard(gameboard2Backend);
-        player2.assignBoard(gameboard1Backend);
+        player1.assignBoard(gameboard1);
+        player2.assignBoard(gameboard2);
     }
 
     function initGame() {
         assignGameboards();
         attachCellEventListeners();
+    }
+
+    function attachCellEventListeners() {
+        cellsG1.forEach((cell) => handlePlayRound(cell, player1));
+        cellsG2.forEach((cell) => handlePlayRound(cell, player2));
+    }
+
+    function handlePlayRound(cell, player) {
+        const x = Number(cell.dataset.row);
+        const y = Number(cell.dataset.column);
+
+        try {
+            gameController.playRound([x, y]);
+            const boardCopy = player.getBoardCopy();
+            const cells = getFrontendCells(player);
+
+            renderFrontendBoard(cells, boardCopy);
+
+            if (currentPlayer.hasWon()) {
+                setTimeout(() => {
+                    declareWinner();
+                }, 5000);
+            } else {
+                gameController.switchTurn();
+                updateCurrentPlayer();
+            }
+        } catch (e) {
+            showError(e.message);
+        }
+    }
+
+    function renderFrontendBoard(cells, boardCopy) {
+        cells.forEach(cell => {
+            const x = Number(cell.dataset.row);
+            const y = Number(cell.dataset.column);
+            const status = boardCopy[x][y];
+
+            if (status === 2) {
+                cell.classList.add('hit');
+            } else if (status === -1) {
+                cell.classList.add('miss');
+            }
+        })
+    }
+
+    function updateCurrentPlayer() {
+        currentPlayer = gameController.getCurrentPlayer();
+        currentPlayerName.textContent = currentPlayer.getName();
+    }
+
+    function declareWinner() {
+        const winnerModal = document.querySelector("#winner-modal");
+        winnerModal.showModal();
+
+        const winnerMessageField = document.querySelector("#error-modal p");
+        winnerMessageField.textContent = `${currentPlayer.getName()}`;
+    }
+
+    function startGame() {
+        playerCreationModal.show();
+    }
+
+    return {
+        startGame
     }
 }
 

@@ -1,11 +1,3 @@
-// const ships = {
-//     battleship : 5,
-//     destroyer : 4,
-//     crusader : 3,
-//     submarine : 2,
-//     lifeboat : 1
-// }
-
 function Player(name) {
     let gameBoard = null;
 
@@ -21,10 +13,20 @@ function Player(name) {
         gameBoard.receiveAttack(cell);
     }
 
+    function getBoardCopy() {
+        return gameBoard.getBoard();
+    }
+
+    function hasWon() {
+        return gameBoard.allShipsSunk();
+    }
+
     return {
         getName,
         assignBoard,
         playMove,
+        getBoardCopy,
+        hasWon
     };
 }
 
