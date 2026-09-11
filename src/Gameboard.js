@@ -45,6 +45,7 @@ function Gameboard() {
         }
 
         ships.push(ship);
+        return ship;
     }
 
     function isValidPlacement(length, start, orientation) {
