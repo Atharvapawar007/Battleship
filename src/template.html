@@ -4,20 +4,26 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Battleship</title>
+        <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
         <header class="site-header">
             <h1>Battleship</h1>
+
+            <div class="turn-readout">
+                <span class="turn-label">Current turn</span>
+                <span id="current-player"></span>
+            </div>
         </header>
 
         <dialog id="start-modal">
             <form action="#">
-                <h2>Player Setup</h2>
-                <p>Enter a name for each player to begin.</p>
+                <h2>Name your crews</h2>
+                <p>Enter a name for each captain to begin.</p>
 
                 <div class="form-row">
-                    <label for="player-name">Player 1 name</label>
+                    <label for="player1-name">Player 1 name</label>
                     <input type="text" id="player1-name" name="player1-name" required />
                 </div>
 
@@ -27,19 +33,19 @@
                 </div>
 
                 <div class="dialog-actions">
-                    <button type="submit">Start Game</button>
+                    <button type="submit">Start game</button>
                 </div>
             </form>
         </dialog>
 
         <dialog id="battleship-details-modal">
             <form action="#">
-                <h2>Place a Ship</h2>
-                <p>Enter Battleship details for <span id="entry-player-name"></span></p>
+                <h2>Place a ship</h2>
+                <p>Enter the ship's details for <span id="entry-player-name"></span></p>
 
                 <div class="form-row">
                     <label for="ship-name">Ship name</label>
-                    <input type="text" id="ship-name" name="ship-name" required />
+                    <input type="text" id="ship-name" name="ship-name" required readonly />
                 </div>
 
                 <div class="form-row">
@@ -51,6 +57,7 @@
                         min="1"
                         max="10"
                         required
+                        readonly
                     />
                 </div>
 
@@ -105,7 +112,7 @@
                 </fieldset>
 
                 <div class="dialog-actions">
-                    <button type="submit">Place Ship</button>
+                    <button type="submit">Place ship</button>
                 </div>
             </form>
         </dialog>
@@ -116,260 +123,285 @@
         </dialog>
 
         <dialog id="winner-modal">
-            <h2>Error</h2>
+            <h2>Victory</h2>
             <p></p>
         </dialog>
 
+        <p class="status-line">
+            Place your fleet, then fire on the enemy grid to find and sink every ship.
+        </p>
+
         <main class="container">
-            <p>Current Player: <span id="current-player"></span></p>
             <section id="left-hand-side" class="board-panel">
-                <h2 id="player1-display-name" class="board-title">Player 1</h2>
-                <div id="gameboard1" class="gameboard">
-                    <div class="row">
-                        <div class="cell" data-row="0" data-column="0"></div>
-                        <div class="cell" data-row="0" data-column="1"></div>
-                        <div class="cell" data-row="0" data-column="2"></div>
-                        <div class="cell" data-row="0" data-column="3"></div>
-                        <div class="cell" data-row="0" data-column="4"></div>
-                        <div class="cell" data-row="0" data-column="5"></div>
-                        <div class="cell" data-row="0" data-column="6"></div>
-                        <div class="cell" data-row="0" data-column="7"></div>
-                        <div class="cell" data-row="0" data-column="8"></div>
-                        <div class="cell" data-row="0" data-column="9"></div>
+                <h2 id="player1-display-name" class="board-title"></h2>
+                <div class="board-frame">
+                    <div class="board-frame__corner"></div>
+                    <div class="board-frame__cols" aria-hidden="true">
+                        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+                        ><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
                     </div>
-                    <div class="row">
-                        <div class="cell" data-row="1" data-column="0"></div>
-                        <div class="cell" data-row="1" data-column="1"></div>
-                        <div class="cell" data-row="1" data-column="2"></div>
-                        <div class="cell" data-row="1" data-column="3"></div>
-                        <div class="cell" data-row="1" data-column="4"></div>
-                        <div class="cell" data-row="1" data-column="5"></div>
-                        <div class="cell" data-row="1" data-column="6"></div>
-                        <div class="cell" data-row="1" data-column="7"></div>
-                        <div class="cell" data-row="1" data-column="8"></div>
-                        <div class="cell" data-row="1" data-column="9"></div>
+                    <div class="board-frame__rows" aria-hidden="true">
+                        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+                        ><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
                     </div>
-                    <div class="row">
-                        <div class="cell" data-row="2" data-column="0"></div>
-                        <div class="cell" data-row="2" data-column="1"></div>
-                        <div class="cell" data-row="2" data-column="2"></div>
-                        <div class="cell" data-row="2" data-column="3"></div>
-                        <div class="cell" data-row="2" data-column="4"></div>
-                        <div class="cell" data-row="2" data-column="5"></div>
-                        <div class="cell" data-row="2" data-column="6"></div>
-                        <div class="cell" data-row="2" data-column="7"></div>
-                        <div class="cell" data-row="2" data-column="8"></div>
-                        <div class="cell" data-row="2" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="3" data-column="0"></div>
-                        <div class="cell" data-row="3" data-column="1"></div>
-                        <div class="cell" data-row="3" data-column="2"></div>
-                        <div class="cell" data-row="3" data-column="3"></div>
-                        <div class="cell" data-row="3" data-column="4"></div>
-                        <div class="cell" data-row="3" data-column="5"></div>
-                        <div class="cell" data-row="3" data-column="6"></div>
-                        <div class="cell" data-row="3" data-column="7"></div>
-                        <div class="cell" data-row="3" data-column="8"></div>
-                        <div class="cell" data-row="3" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="4" data-column="0"></div>
-                        <div class="cell" data-row="4" data-column="1"></div>
-                        <div class="cell" data-row="4" data-column="2"></div>
-                        <div class="cell" data-row="4" data-column="3"></div>
-                        <div class="cell" data-row="4" data-column="4"></div>
-                        <div class="cell" data-row="4" data-column="5"></div>
-                        <div class="cell" data-row="4" data-column="6"></div>
-                        <div class="cell" data-row="4" data-column="7"></div>
-                        <div class="cell" data-row="4" data-column="8"></div>
-                        <div class="cell" data-row="4" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="5" data-column="0"></div>
-                        <div class="cell" data-row="5" data-column="1"></div>
-                        <div class="cell" data-row="5" data-column="2"></div>
-                        <div class="cell" data-row="5" data-column="3"></div>
-                        <div class="cell" data-row="5" data-column="4"></div>
-                        <div class="cell" data-row="5" data-column="5"></div>
-                        <div class="cell" data-row="5" data-column="6"></div>
-                        <div class="cell" data-row="5" data-column="7"></div>
-                        <div class="cell" data-row="5" data-column="8"></div>
-                        <div class="cell" data-row="5" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="6" data-column="0"></div>
-                        <div class="cell" data-row="6" data-column="1"></div>
-                        <div class="cell" data-row="6" data-column="2"></div>
-                        <div class="cell" data-row="6" data-column="3"></div>
-                        <div class="cell" data-row="6" data-column="4"></div>
-                        <div class="cell" data-row="6" data-column="5"></div>
-                        <div class="cell" data-row="6" data-column="6"></div>
-                        <div class="cell" data-row="6" data-column="7"></div>
-                        <div class="cell" data-row="6" data-column="8"></div>
-                        <div class="cell" data-row="6" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="7" data-column="0"></div>
-                        <div class="cell" data-row="7" data-column="1"></div>
-                        <div class="cell" data-row="7" data-column="2"></div>
-                        <div class="cell" data-row="7" data-column="3"></div>
-                        <div class="cell" data-row="7" data-column="4"></div>
-                        <div class="cell" data-row="7" data-column="5"></div>
-                        <div class="cell" data-row="7" data-column="6"></div>
-                        <div class="cell" data-row="7" data-column="7"></div>
-                        <div class="cell" data-row="7" data-column="8"></div>
-                        <div class="cell" data-row="7" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="8" data-column="0"></div>
-                        <div class="cell" data-row="8" data-column="1"></div>
-                        <div class="cell" data-row="8" data-column="2"></div>
-                        <div class="cell" data-row="8" data-column="3"></div>
-                        <div class="cell" data-row="8" data-column="4"></div>
-                        <div class="cell" data-row="8" data-column="5"></div>
-                        <div class="cell" data-row="8" data-column="6"></div>
-                        <div class="cell" data-row="8" data-column="7"></div>
-                        <div class="cell" data-row="8" data-column="8"></div>
-                        <div class="cell" data-row="8" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="9" data-column="0"></div>
-                        <div class="cell" data-row="9" data-column="1"></div>
-                        <div class="cell" data-row="9" data-column="2"></div>
-                        <div class="cell" data-row="9" data-column="3"></div>
-                        <div class="cell" data-row="9" data-column="4"></div>
-                        <div class="cell" data-row="9" data-column="5"></div>
-                        <div class="cell" data-row="9" data-column="6"></div>
-                        <div class="cell" data-row="9" data-column="7"></div>
-                        <div class="cell" data-row="9" data-column="8"></div>
-                        <div class="cell" data-row="9" data-column="9"></div>
+                    <div id="gameboard1" class="gameboard">
+                        <div class="row">
+                            <div class="cell" data-row="0" data-column="0"></div>
+                            <div class="cell" data-row="0" data-column="1"></div>
+                            <div class="cell" data-row="0" data-column="2"></div>
+                            <div class="cell" data-row="0" data-column="3"></div>
+                            <div class="cell" data-row="0" data-column="4"></div>
+                            <div class="cell" data-row="0" data-column="5"></div>
+                            <div class="cell" data-row="0" data-column="6"></div>
+                            <div class="cell" data-row="0" data-column="7"></div>
+                            <div class="cell" data-row="0" data-column="8"></div>
+                            <div class="cell" data-row="0" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="1" data-column="0"></div>
+                            <div class="cell" data-row="1" data-column="1"></div>
+                            <div class="cell" data-row="1" data-column="2"></div>
+                            <div class="cell" data-row="1" data-column="3"></div>
+                            <div class="cell" data-row="1" data-column="4"></div>
+                            <div class="cell" data-row="1" data-column="5"></div>
+                            <div class="cell" data-row="1" data-column="6"></div>
+                            <div class="cell" data-row="1" data-column="7"></div>
+                            <div class="cell" data-row="1" data-column="8"></div>
+                            <div class="cell" data-row="1" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="2" data-column="0"></div>
+                            <div class="cell" data-row="2" data-column="1"></div>
+                            <div class="cell" data-row="2" data-column="2"></div>
+                            <div class="cell" data-row="2" data-column="3"></div>
+                            <div class="cell" data-row="2" data-column="4"></div>
+                            <div class="cell" data-row="2" data-column="5"></div>
+                            <div class="cell" data-row="2" data-column="6"></div>
+                            <div class="cell" data-row="2" data-column="7"></div>
+                            <div class="cell" data-row="2" data-column="8"></div>
+                            <div class="cell" data-row="2" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="3" data-column="0"></div>
+                            <div class="cell" data-row="3" data-column="1"></div>
+                            <div class="cell" data-row="3" data-column="2"></div>
+                            <div class="cell" data-row="3" data-column="3"></div>
+                            <div class="cell" data-row="3" data-column="4"></div>
+                            <div class="cell" data-row="3" data-column="5"></div>
+                            <div class="cell" data-row="3" data-column="6"></div>
+                            <div class="cell" data-row="3" data-column="7"></div>
+                            <div class="cell" data-row="3" data-column="8"></div>
+                            <div class="cell" data-row="3" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="4" data-column="0"></div>
+                            <div class="cell" data-row="4" data-column="1"></div>
+                            <div class="cell" data-row="4" data-column="2"></div>
+                            <div class="cell" data-row="4" data-column="3"></div>
+                            <div class="cell" data-row="4" data-column="4"></div>
+                            <div class="cell" data-row="4" data-column="5"></div>
+                            <div class="cell" data-row="4" data-column="6"></div>
+                            <div class="cell" data-row="4" data-column="7"></div>
+                            <div class="cell" data-row="4" data-column="8"></div>
+                            <div class="cell" data-row="4" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="5" data-column="0"></div>
+                            <div class="cell" data-row="5" data-column="1"></div>
+                            <div class="cell" data-row="5" data-column="2"></div>
+                            <div class="cell" data-row="5" data-column="3"></div>
+                            <div class="cell" data-row="5" data-column="4"></div>
+                            <div class="cell" data-row="5" data-column="5"></div>
+                            <div class="cell" data-row="5" data-column="6"></div>
+                            <div class="cell" data-row="5" data-column="7"></div>
+                            <div class="cell" data-row="5" data-column="8"></div>
+                            <div class="cell" data-row="5" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="6" data-column="0"></div>
+                            <div class="cell" data-row="6" data-column="1"></div>
+                            <div class="cell" data-row="6" data-column="2"></div>
+                            <div class="cell" data-row="6" data-column="3"></div>
+                            <div class="cell" data-row="6" data-column="4"></div>
+                            <div class="cell" data-row="6" data-column="5"></div>
+                            <div class="cell" data-row="6" data-column="6"></div>
+                            <div class="cell" data-row="6" data-column="7"></div>
+                            <div class="cell" data-row="6" data-column="8"></div>
+                            <div class="cell" data-row="6" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="7" data-column="0"></div>
+                            <div class="cell" data-row="7" data-column="1"></div>
+                            <div class="cell" data-row="7" data-column="2"></div>
+                            <div class="cell" data-row="7" data-column="3"></div>
+                            <div class="cell" data-row="7" data-column="4"></div>
+                            <div class="cell" data-row="7" data-column="5"></div>
+                            <div class="cell" data-row="7" data-column="6"></div>
+                            <div class="cell" data-row="7" data-column="7"></div>
+                            <div class="cell" data-row="7" data-column="8"></div>
+                            <div class="cell" data-row="7" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="8" data-column="0"></div>
+                            <div class="cell" data-row="8" data-column="1"></div>
+                            <div class="cell" data-row="8" data-column="2"></div>
+                            <div class="cell" data-row="8" data-column="3"></div>
+                            <div class="cell" data-row="8" data-column="4"></div>
+                            <div class="cell" data-row="8" data-column="5"></div>
+                            <div class="cell" data-row="8" data-column="6"></div>
+                            <div class="cell" data-row="8" data-column="7"></div>
+                            <div class="cell" data-row="8" data-column="8"></div>
+                            <div class="cell" data-row="8" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="9" data-column="0"></div>
+                            <div class="cell" data-row="9" data-column="1"></div>
+                            <div class="cell" data-row="9" data-column="2"></div>
+                            <div class="cell" data-row="9" data-column="3"></div>
+                            <div class="cell" data-row="9" data-column="4"></div>
+                            <div class="cell" data-row="9" data-column="5"></div>
+                            <div class="cell" data-row="9" data-column="6"></div>
+                            <div class="cell" data-row="9" data-column="7"></div>
+                            <div class="cell" data-row="9" data-column="8"></div>
+                            <div class="cell" data-row="9" data-column="9"></div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section id="right-hand-side" class="board-panel">
-                <h2 id="player2-display-name" class="board-title">Player 2</h2>
-                <div id="gameboard2" class="gameboard gameboard--enemy">
-                    <div class="row">
-                        <div class="cell" data-row="0" data-column="0"></div>
-                        <div class="cell" data-row="0" data-column="1"></div>
-                        <div class="cell" data-row="0" data-column="2"></div>
-                        <div class="cell" data-row="0" data-column="3"></div>
-                        <div class="cell" data-row="0" data-column="4"></div>
-                        <div class="cell" data-row="0" data-column="5"></div>
-                        <div class="cell" data-row="0" data-column="6"></div>
-                        <div class="cell" data-row="0" data-column="7"></div>
-                        <div class="cell" data-row="0" data-column="8"></div>
-                        <div class="cell" data-row="0" data-column="9"></div>
+            <section id="right-hand-side" class="board-panel board-panel--enemy">
+                <h2 id="player2-display-name" class="board-title">Player 2's waters</h2>
+                <div class="board-frame">
+                    <div class="board-frame__corner"></div>
+                    <div class="board-frame__cols" aria-hidden="true">
+                        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+                        ><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
                     </div>
-                    <div class="row">
-                        <div class="cell" data-row="1" data-column="0"></div>
-                        <div class="cell" data-row="1" data-column="1"></div>
-                        <div class="cell" data-row="1" data-column="2"></div>
-                        <div class="cell" data-row="1" data-column="3"></div>
-                        <div class="cell" data-row="1" data-column="4"></div>
-                        <div class="cell" data-row="1" data-column="5"></div>
-                        <div class="cell" data-row="1" data-column="6"></div>
-                        <div class="cell" data-row="1" data-column="7"></div>
-                        <div class="cell" data-row="1" data-column="8"></div>
-                        <div class="cell" data-row="1" data-column="9"></div>
+                    <div class="board-frame__rows" aria-hidden="true">
+                        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span
+                        ><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
                     </div>
-                    <div class="row">
-                        <div class="cell" data-row="2" data-column="0"></div>
-                        <div class="cell" data-row="2" data-column="1"></div>
-                        <div class="cell" data-row="2" data-column="2"></div>
-                        <div class="cell" data-row="2" data-column="3"></div>
-                        <div class="cell" data-row="2" data-column="4"></div>
-                        <div class="cell" data-row="2" data-column="5"></div>
-                        <div class="cell" data-row="2" data-column="6"></div>
-                        <div class="cell" data-row="2" data-column="7"></div>
-                        <div class="cell" data-row="2" data-column="8"></div>
-                        <div class="cell" data-row="2" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="3" data-column="0"></div>
-                        <div class="cell" data-row="3" data-column="1"></div>
-                        <div class="cell" data-row="3" data-column="2"></div>
-                        <div class="cell" data-row="3" data-column="3"></div>
-                        <div class="cell" data-row="3" data-column="4"></div>
-                        <div class="cell" data-row="3" data-column="5"></div>
-                        <div class="cell" data-row="3" data-column="6"></div>
-                        <div class="cell" data-row="3" data-column="7"></div>
-                        <div class="cell" data-row="3" data-column="8"></div>
-                        <div class="cell" data-row="3" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="4" data-column="0"></div>
-                        <div class="cell" data-row="4" data-column="1"></div>
-                        <div class="cell" data-row="4" data-column="2"></div>
-                        <div class="cell" data-row="4" data-column="3"></div>
-                        <div class="cell" data-row="4" data-column="4"></div>
-                        <div class="cell" data-row="4" data-column="5"></div>
-                        <div class="cell" data-row="4" data-column="6"></div>
-                        <div class="cell" data-row="4" data-column="7"></div>
-                        <div class="cell" data-row="4" data-column="8"></div>
-                        <div class="cell" data-row="4" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="5" data-column="0"></div>
-                        <div class="cell" data-row="5" data-column="1"></div>
-                        <div class="cell" data-row="5" data-column="2"></div>
-                        <div class="cell" data-row="5" data-column="3"></div>
-                        <div class="cell" data-row="5" data-column="4"></div>
-                        <div class="cell" data-row="5" data-column="5"></div>
-                        <div class="cell" data-row="5" data-column="6"></div>
-                        <div class="cell" data-row="5" data-column="7"></div>
-                        <div class="cell" data-row="5" data-column="8"></div>
-                        <div class="cell" data-row="5" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="6" data-column="0"></div>
-                        <div class="cell" data-row="6" data-column="1"></div>
-                        <div class="cell" data-row="6" data-column="2"></div>
-                        <div class="cell" data-row="6" data-column="3"></div>
-                        <div class="cell" data-row="6" data-column="4"></div>
-                        <div class="cell" data-row="6" data-column="5"></div>
-                        <div class="cell" data-row="6" data-column="6"></div>
-                        <div class="cell" data-row="6" data-column="7"></div>
-                        <div class="cell" data-row="6" data-column="8"></div>
-                        <div class="cell" data-row="6" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="7" data-column="0"></div>
-                        <div class="cell" data-row="7" data-column="1"></div>
-                        <div class="cell" data-row="7" data-column="2"></div>
-                        <div class="cell" data-row="7" data-column="3"></div>
-                        <div class="cell" data-row="7" data-column="4"></div>
-                        <div class="cell" data-row="7" data-column="5"></div>
-                        <div class="cell" data-row="7" data-column="6"></div>
-                        <div class="cell" data-row="7" data-column="7"></div>
-                        <div class="cell" data-row="7" data-column="8"></div>
-                        <div class="cell" data-row="7" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="8" data-column="0"></div>
-                        <div class="cell" data-row="8" data-column="1"></div>
-                        <div class="cell" data-row="8" data-column="2"></div>
-                        <div class="cell" data-row="8" data-column="3"></div>
-                        <div class="cell" data-row="8" data-column="4"></div>
-                        <div class="cell" data-row="8" data-column="5"></div>
-                        <div class="cell" data-row="8" data-column="6"></div>
-                        <div class="cell" data-row="8" data-column="7"></div>
-                        <div class="cell" data-row="8" data-column="8"></div>
-                        <div class="cell" data-row="8" data-column="9"></div>
-                    </div>
-                    <div class="row">
-                        <div class="cell" data-row="9" data-column="0"></div>
-                        <div class="cell" data-row="9" data-column="1"></div>
-                        <div class="cell" data-row="9" data-column="2"></div>
-                        <div class="cell" data-row="9" data-column="3"></div>
-                        <div class="cell" data-row="9" data-column="4"></div>
-                        <div class="cell" data-row="9" data-column="5"></div>
-                        <div class="cell" data-row="9" data-column="6"></div>
-                        <div class="cell" data-row="9" data-column="7"></div>
-                        <div class="cell" data-row="9" data-column="8"></div>
-                        <div class="cell" data-row="9" data-column="9"></div>
+                    <div id="gameboard2" class="gameboard gameboard--enemy">
+                        <div class="row">
+                            <div class="cell" data-row="0" data-column="0"></div>
+                            <div class="cell" data-row="0" data-column="1"></div>
+                            <div class="cell" data-row="0" data-column="2"></div>
+                            <div class="cell" data-row="0" data-column="3"></div>
+                            <div class="cell" data-row="0" data-column="4"></div>
+                            <div class="cell" data-row="0" data-column="5"></div>
+                            <div class="cell" data-row="0" data-column="6"></div>
+                            <div class="cell" data-row="0" data-column="7"></div>
+                            <div class="cell" data-row="0" data-column="8"></div>
+                            <div class="cell" data-row="0" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="1" data-column="0"></div>
+                            <div class="cell" data-row="1" data-column="1"></div>
+                            <div class="cell" data-row="1" data-column="2"></div>
+                            <div class="cell" data-row="1" data-column="3"></div>
+                            <div class="cell" data-row="1" data-column="4"></div>
+                            <div class="cell" data-row="1" data-column="5"></div>
+                            <div class="cell" data-row="1" data-column="6"></div>
+                            <div class="cell" data-row="1" data-column="7"></div>
+                            <div class="cell" data-row="1" data-column="8"></div>
+                            <div class="cell" data-row="1" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="2" data-column="0"></div>
+                            <div class="cell" data-row="2" data-column="1"></div>
+                            <div class="cell" data-row="2" data-column="2"></div>
+                            <div class="cell" data-row="2" data-column="3"></div>
+                            <div class="cell" data-row="2" data-column="4"></div>
+                            <div class="cell" data-row="2" data-column="5"></div>
+                            <div class="cell" data-row="2" data-column="6"></div>
+                            <div class="cell" data-row="2" data-column="7"></div>
+                            <div class="cell" data-row="2" data-column="8"></div>
+                            <div class="cell" data-row="2" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="3" data-column="0"></div>
+                            <div class="cell" data-row="3" data-column="1"></div>
+                            <div class="cell" data-row="3" data-column="2"></div>
+                            <div class="cell" data-row="3" data-column="3"></div>
+                            <div class="cell" data-row="3" data-column="4"></div>
+                            <div class="cell" data-row="3" data-column="5"></div>
+                            <div class="cell" data-row="3" data-column="6"></div>
+                            <div class="cell" data-row="3" data-column="7"></div>
+                            <div class="cell" data-row="3" data-column="8"></div>
+                            <div class="cell" data-row="3" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="4" data-column="0"></div>
+                            <div class="cell" data-row="4" data-column="1"></div>
+                            <div class="cell" data-row="4" data-column="2"></div>
+                            <div class="cell" data-row="4" data-column="3"></div>
+                            <div class="cell" data-row="4" data-column="4"></div>
+                            <div class="cell" data-row="4" data-column="5"></div>
+                            <div class="cell" data-row="4" data-column="6"></div>
+                            <div class="cell" data-row="4" data-column="7"></div>
+                            <div class="cell" data-row="4" data-column="8"></div>
+                            <div class="cell" data-row="4" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="5" data-column="0"></div>
+                            <div class="cell" data-row="5" data-column="1"></div>
+                            <div class="cell" data-row="5" data-column="2"></div>
+                            <div class="cell" data-row="5" data-column="3"></div>
+                            <div class="cell" data-row="5" data-column="4"></div>
+                            <div class="cell" data-row="5" data-column="5"></div>
+                            <div class="cell" data-row="5" data-column="6"></div>
+                            <div class="cell" data-row="5" data-column="7"></div>
+                            <div class="cell" data-row="5" data-column="8"></div>
+                            <div class="cell" data-row="5" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="6" data-column="0"></div>
+                            <div class="cell" data-row="6" data-column="1"></div>
+                            <div class="cell" data-row="6" data-column="2"></div>
+                            <div class="cell" data-row="6" data-column="3"></div>
+                            <div class="cell" data-row="6" data-column="4"></div>
+                            <div class="cell" data-row="6" data-column="5"></div>
+                            <div class="cell" data-row="6" data-column="6"></div>
+                            <div class="cell" data-row="6" data-column="7"></div>
+                            <div class="cell" data-row="6" data-column="8"></div>
+                            <div class="cell" data-row="6" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="7" data-column="0"></div>
+                            <div class="cell" data-row="7" data-column="1"></div>
+                            <div class="cell" data-row="7" data-column="2"></div>
+                            <div class="cell" data-row="7" data-column="3"></div>
+                            <div class="cell" data-row="7" data-column="4"></div>
+                            <div class="cell" data-row="7" data-column="5"></div>
+                            <div class="cell" data-row="7" data-column="6"></div>
+                            <div class="cell" data-row="7" data-column="7"></div>
+                            <div class="cell" data-row="7" data-column="8"></div>
+                            <div class="cell" data-row="7" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="8" data-column="0"></div>
+                            <div class="cell" data-row="8" data-column="1"></div>
+                            <div class="cell" data-row="8" data-column="2"></div>
+                            <div class="cell" data-row="8" data-column="3"></div>
+                            <div class="cell" data-row="8" data-column="4"></div>
+                            <div class="cell" data-row="8" data-column="5"></div>
+                            <div class="cell" data-row="8" data-column="6"></div>
+                            <div class="cell" data-row="8" data-column="7"></div>
+                            <div class="cell" data-row="8" data-column="8"></div>
+                            <div class="cell" data-row="8" data-column="9"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell" data-row="9" data-column="0"></div>
+                            <div class="cell" data-row="9" data-column="1"></div>
+                            <div class="cell" data-row="9" data-column="2"></div>
+                            <div class="cell" data-row="9" data-column="3"></div>
+                            <div class="cell" data-row="9" data-column="4"></div>
+                            <div class="cell" data-row="9" data-column="5"></div>
+                            <div class="cell" data-row="9" data-column="6"></div>
+                            <div class="cell" data-row="9" data-column="7"></div>
+                            <div class="cell" data-row="9" data-column="8"></div>
+                            <div class="cell" data-row="9" data-column="9"></div>
+                        </div>
                     </div>
                 </div>
             </section>

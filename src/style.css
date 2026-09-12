@@ -1,20 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap");
+/* Oswald = instrument-panel display face for headings/readouts. IBM Plex Sans = technical, manual-style body face. */
+
 /* =========================================
    1. Reset (kept as-is from the original file)
    ========================================= */
 
-/* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
 
-/* 2. Remove default margin */
 *:not(dialog) {
     margin: 0;
 }
 
-/* 3. Enable keyword animations */
 @media (prefers-reduced-motion: no-preference) {
     html {
         interpolate-size: allow-keywords;
@@ -22,13 +22,10 @@
 }
 
 body {
-    /* 4. Increase line-height */
     line-height: 1.5;
-    /* 5. Improve text rendering */
     -webkit-font-smoothing: antialiased;
 }
 
-/* 6. Improve media defaults */
 img,
 picture,
 video,
@@ -38,7 +35,6 @@ svg {
     max-width: 100%;
 }
 
-/* 7. Inherit fonts for form controls */
 input,
 button,
 textarea,
@@ -46,7 +42,6 @@ select {
     font: inherit;
 }
 
-/* 8. Avoid text overflows */
 p,
 h1,
 h2,
@@ -57,7 +52,6 @@ h6 {
     overflow-wrap: break-word;
 }
 
-/* 9. Improve line wrapping */
 p {
     text-wrap: pretty;
 }
@@ -71,67 +65,161 @@ h6 {
     text-wrap: balance;
 }
 
-/*
-  10. Create a root stacking context
-*/
 #root,
 #__next {
     isolation: isolate;
 }
 
 /* =========================================
-   2. Colors and general page styling
+   2. Design tokens — two consoles, one system
+   Dark  = "Night Watch"   (submarine sonar bay)
+   Light = "Chart Table"   (paper nautical chart under a desk lamp)
    ========================================= */
 
 :root {
-    --color-navy: #0b3d59;
-    --color-navy-dark: #072a3f;
-    --color-sea: #e8f3f8;
-    --color-sea-mid: #cfe6f0;
-    --color-border: #9fc4d6;
-    --color-text: #1b2a33;
-    --color-accent: #ff8c42;
+    color-scheme: dark;
 
-    --color-ship: #4a5a66;
-    --color-hit: #d64545;
-    --color-miss: #ffffff;
-    --color-selected: #ffd166;
-    --color-possible: #a8d5ba;
-    --color-disabled: #cccccc;
-}
+    --bg: #060d14;
+    --bg-grid-line: rgba(79, 224, 160, 0.05);
+    --panel: #0d1b26;
+    --panel-raised: #142838;
+    --panel-inset: #0a1620;
 
-body {
-    font-family:
-        system-ui,
-        -apple-system,
-        "Segoe UI",
-        Roboto,
-        sans-serif;
-    background-color: var(--color-sea);
-    color: var(--color-text);
-    min-height: 100vh;
-    padding-bottom: 2rem;
+    --ink: #dce9ee;
+    --ink-dim: #9fb4c0;
+    --muted: #5f7a8a;
+
+    --border: #1f3b4d;
+    --border-strong: #2c5068;
+
+    --brass: #d3a25c;
+    --brass-dim: #8a6a3c;
+    --radar: #4fe0a0;
+    --radar-dim: #1f5f47;
+
+    --water: #0f2636;
+    --water-mid: #16344a;
+
+    --hit: #ff6a5e;
+    --hit-glow: rgba(255, 106, 94, 0.45);
+    --miss-ring: #6d8ea3;
+    --ship-hull: #3c5468;
+
+    --shadow-deep: 0 20px 50px rgba(0, 0, 0, 0.55);
+    --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 /* =========================================
-   3. Page header
+   3. Base page
+   ========================================= */
+
+body {
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(circle at 15% 10%, var(--bg-grid-line) 0, transparent 45%),
+        radial-gradient(circle at 85% 90%, var(--bg-grid-line) 0, transparent 45%),
+        repeating-linear-gradient(
+            0deg,
+            var(--bg-grid-line) 0,
+            var(--bg-grid-line) 1px,
+            transparent 1px,
+            transparent 32px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            var(--bg-grid-line) 0,
+            var(--bg-grid-line) 1px,
+            transparent 1px,
+            transparent 32px
+        );
+    color: var(--ink);
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    transition:
+        background-color 0.4s ease,
+        color 0.4s ease;
+}
+
+::selection {
+    background-color: var(--radar);
+    color: var(--panel-inset);
+}
+
+:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+}
+
+/* =========================================
+   4. Console header
    ========================================= */
 
 .site-header {
-    background-color: var(--color-navy);
-    color: white;
-    text-align: center;
-    padding: 1.5rem 1rem;
-    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background-color: var(--panel);
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+    padding: 0.9rem 1.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-soft);
+    flex-wrap: wrap;
+}
+
+.site-header::before {
+    content: "";
 }
 
 .site-header h1 {
-    font-size: 2rem;
-    letter-spacing: 0.05em;
+    font-family: "Oswald", sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.site-header h1::before {
+    content: "";
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background-color: var(--radar);
+    box-shadow: 0 0 8px 2px var(--radar);
+    animation: blip 2.4s ease-in-out infinite;
+}
+
+/* Turn readout, styled like an LED instrument display */
+.turn-readout {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.85rem;
+    color: var(--radar);
+    background-color: var(--panel-inset);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 0.45rem 0.9rem;
+}
+
+.turn-readout .turn-label {
+    color: var(--muted);
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+#current-player {
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 /* =========================================
-   4. Layout: the two board panels
+   5. Layout: the two board consoles
    ========================================= */
 
 .container {
@@ -140,6 +228,16 @@ body {
     justify-content: center;
     align-items: flex-start;
     gap: 3rem;
+    padding: 0 1.5rem;
+}
+
+.status-line {
+    text-align: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 auto 2rem;
+    max-width: 40rem;
     padding: 0 1rem;
 }
 
@@ -147,28 +245,113 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.9rem;
+    background-color: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-soft);
 }
 
 .board-title {
-    font-size: 1.25rem;
-    color: var(--color-navy-dark);
+    font-family: "Oswald", sans-serif;
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.board-title::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background-color: var(--brass);
+}
+
+.board-panel--enemy .board-title::before {
+    background-color: var(--hit);
 }
 
 /* =========================================
-   5. Gameboards
+   6. Board frame + coordinate ruler
+   ========================================= */
+
+.board-frame {
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    grid-template-rows: 1.6rem 1fr;
+    grid-template-areas:
+        "corner cols"
+        "rows   board";
+    gap: 4px;
+    width: min(88vw, 420px);
+}
+
+.board-frame__corner {
+    grid-area: corner;
+}
+
+.board-frame__cols,
+.board-frame__rows {
+    display: grid;
+    color: var(--muted);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.65rem;
+}
+
+.board-frame__cols {
+    grid-area: cols;
+    grid-template-columns: repeat(10, 1fr);
+    align-items: end;
+    justify-items: center;
+    padding-bottom: 2px;
+}
+
+.board-frame__rows {
+    grid-area: rows;
+    grid-template-rows: repeat(10, 1fr);
+    align-items: center;
+    justify-items: center;
+}
+
+/* =========================================
+   7. Gameboards
    ========================================= */
 
 .gameboard {
+    grid-area: board;
     display: grid;
     grid-template-rows: repeat(10, 1fr);
-    width: min(90vw, 420px);
     aspect-ratio: 1 / 1;
-    background-color: var(--color-navy);
-    border: 3px solid var(--color-navy-dark);
+    background-color: var(--water);
+    border: 3px solid var(--border-strong);
     padding: 4px;
     gap: 2px;
     border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* One orchestrated sweep on load, per board */
+.gameboard::after {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--radar-dim) 8deg,
+        transparent 40deg
+    );
+    opacity: 0;
+    pointer-events: none;
+    animation: sweep-once 1.6s ease-out 1 forwards;
+}
+
+#gameboard2::after {
+    animation-delay: 0.3s;
 }
 
 .row {
@@ -178,28 +361,41 @@ body {
 }
 
 .cell {
-    background-color: var(--color-sea-mid);
-    border: 1px solid var(--color-border);
+    background-color: var(--water-mid);
+    border: 1px solid var(--border);
+    position: relative;
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease;
 }
 
 /* The enemy board looks clickable */
 .gameboard--enemy .cell {
     cursor: pointer;
-    transition: background-color 0.15s ease;
 }
 
 .gameboard--enemy .cell:hover {
-    background-color: var(--color-selected);
+    background-color: var(--panel-raised);
+}
+
+.gameboard--enemy .cell:hover::before {
+    content: "";
+    position: absolute;
+    inset: 15%;
+    border: 1px solid var(--radar);
+    border-radius: 50%;
+    animation: ping 0.6s ease-out;
+    pointer-events: none;
 }
 
 /* Game state classes for JavaScript to toggle */
 .cell.ship {
-    background-color: var(--color-ship);
+    background-color: var(--ship-hull);
+    animation: ship-in 0.35s ease-out;
 }
 
 .cell.hit {
-    background-color: var(--color-hit);
-    position: relative;
+    background-color: var(--hit);
 }
 
 .cell.hit::after {
@@ -209,12 +405,24 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--panel-inset);
     font-size: 0.9rem;
+    font-weight: 700;
+    animation: impact 0.4s ease-out;
+}
+
+.cell.hit::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border: 2px solid var(--hit);
+    border-radius: 50%;
+    animation: blast-ring 0.55s ease-out;
+    pointer-events: none;
 }
 
 .cell.miss {
-    background-color: var(--color-miss);
+    background-color: var(--miss);
     position: relative;
 }
 
@@ -226,48 +434,91 @@ body {
     width: 30%;
     height: 30%;
     transform: translate(-50%, -50%);
-    background-color: var(--color-navy);
+    background-color: var(--ink);
     border-radius: 50%;
+    opacity: 0.85;
+}
+
+.cell.miss::before {
+    content: "";
+    position: absolute;
+    inset: 20%;
+    border: 1px solid var(--miss-ring);
+    border-radius: 50%;
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
 }
 
 .cell.selected {
-    outline: 3px solid var(--color-selected);
+    outline: 3px solid var(--brass);
     outline-offset: -3px;
 }
 
 .cell.possible {
-    background-color: var(--color-possible);
+    background-color: var(--radar-dim);
 }
 
 .cell.disabled {
-    background-color: var(--color-disabled);
+    background-color: var(--panel-inset);
     cursor: not-allowed;
 }
 
 /* =========================================
-   6. Dialogs
+   8. Dialogs
    ========================================= */
 
 dialog {
     border: none;
-    border-radius: 8px;
-    padding: 1.5rem 2rem;
-    width: min(90vw, 400px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    padding: 1.75rem 2rem;
+    width: min(90vw, 420px);
+    background-color: var(--panel-raised);
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-deep);
 }
 
 dialog::backdrop {
-    background-color: rgba(7, 42, 63, 0.6);
+    background-color: rgba(3, 8, 12, 0.7);
+    backdrop-filter: blur(2px);
+}
+
+@supports (animation-timeline: view()) or (transition-behavior: allow-discrete) {
+    dialog {
+        transition:
+            opacity 0.25s ease,
+            transform 0.25s ease,
+            overlay 0.25s allow-discrete,
+            display 0.25s allow-discrete;
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    dialog[open] {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    @starting-style {
+        dialog[open] {
+            opacity: 0;
+            transform: translateY(10px) scale(0.98);
+        }
+    }
 }
 
 dialog h2 {
-    color: var(--color-navy-dark);
+    font-family: "Oswald", sans-serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--ink);
     margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
 }
 
 dialog p {
     margin-bottom: 1rem;
-    color: var(--color-text);
+    color: var(--ink-dim);
 }
 
 dialog form {
@@ -284,31 +535,35 @@ dialog form {
 
 .form-row label {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--ink-dim);
 }
 
 .form-row input[type="text"],
 .form-row input[type="number"] {
-    padding: 0.5rem;
-    border: 1px solid var(--color-border);
+    padding: 0.55rem 0.65rem;
+    border: 1px solid var(--border-strong);
     border-radius: 4px;
+    background-color: var(--panel-inset);
+    color: var(--ink);
 }
 
 .form-row input:focus {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--brass);
     outline-offset: 1px;
 }
 
 fieldset {
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border-strong);
     border-radius: 4px;
     padding: 0.75rem;
 }
 
 fieldset legend {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     padding: 0 0.35rem;
+    color: var(--ink-dim);
 }
 
 .coordinate-inputs {
@@ -332,6 +587,8 @@ fieldset legend {
 
 .orientation-choice label {
     margin-right: 1rem;
+    font-weight: 400;
+    color: var(--ink);
 }
 
 .dialog-actions {
@@ -340,27 +597,187 @@ fieldset legend {
 }
 
 button[type="submit"] {
-    background-color: var(--color-navy);
-    color: white;
+    background-color: var(--brass);
+    color: var(--panel-inset);
     border: none;
-    padding: 0.6rem 1.4rem;
+    padding: 0.65rem 1.5rem;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 600;
+    letter-spacing: 0.02em;
+    transition:
+        background-color 0.15s ease,
+        transform 0.1s ease;
 }
 
 button[type="submit"]:hover {
-    background-color: var(--color-navy-dark);
+    background-color: var(--radar);
+    transform: translateY(-1px);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+#error-modal h2 {
+    color: var(--hit);
+}
+
+#ship-name[readonly],
+#ship-length[readonly] {
+    cursor: not-allowed;
 }
 
 /* =========================================
-   7. Responsiveness
+   9. Keyframes
    ========================================= */
+
+@keyframes blip {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.35;
+    }
+}
+
+@keyframes sweep-once {
+    from {
+        transform: rotate(0deg);
+        opacity: 0.55;
+    }
+
+    to {
+        transform: rotate(300deg);
+        opacity: 0;
+    }
+}
+
+@keyframes ping {
+    from {
+        transform: scale(0.6);
+        opacity: 0.9;
+    }
+
+    to {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+}
+
+@keyframes ship-in {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes impact {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes blast-ring {
+    from {
+        transform: scale(0.4);
+        opacity: 0.9;
+    }
+
+    to {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+@keyframes ripple {
+    from {
+        transform: scale(0.4);
+        opacity: 0.8;
+    }
+
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gameboard::after,
+    .gameboard--enemy .cell:hover::before,
+    .cell.ship,
+    .cell.hit::after,
+    .cell.hit::before,
+    .cell.miss::before,
+    .site-header h1::before {
+        animation: none !important;
+    }
+}
+
+/* =========================================
+   10. Responsiveness
+   ========================================= */
+
+@media (max-width: 900px) {
+    .container {
+        gap: 2rem;
+    }
+}
 
 @media (max-width: 800px) {
     .container {
         flex-direction: column;
         align-items: center;
         gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
+
+    .board-panel {
+        padding: 0.85rem;
+        width: 100%;
+    }
+
+    .board-frame {
+        width: min(92vw, 380px);
+        grid-template-columns: 1.1rem 1fr;
+        grid-template-rows: 1.1rem 1fr;
+    }
+
+    .board-frame__cols,
+    .board-frame__rows {
+        font-size: 0.55rem;
+    }
+
+    dialog {
+        padding: 1.25rem 1.4rem;
+    }
+
+    .coordinate-inputs {
+        flex-direction: column;
     }
 }

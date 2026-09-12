@@ -1,10 +1,6 @@
 function Player(name) {
     let gameBoard = null;
 
-    function getName() {
-        return name;
-    }
-
     function assignBoard(board) {
         gameBoard = board;
     }
@@ -22,7 +18,9 @@ function Player(name) {
     }
 
     return {
-        getName,
+        get name() {
+            return name;
+        },
         assignBoard,
         playMove,
         getBoardCopy,

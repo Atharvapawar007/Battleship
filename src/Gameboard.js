@@ -24,7 +24,7 @@ function Gameboard() {
 
     function placeShip(length, start, orientation) {
         if (!isValidPlacement(length, start, orientation)) {
-            throw new Error("Invalid placement");
+            throw new Error("Invalid placement: Ship is being placed out of bounds");
         }
 
         const ship = Ship(length);

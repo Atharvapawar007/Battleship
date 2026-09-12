@@ -14,6 +14,7 @@ function DisplayController() {
     const cellsG1 = document.querySelectorAll("#gameboard1 .cell");
     const cellsG2 = document.querySelectorAll("#gameboard2 .cell");
     const currentPlayerName = document.querySelector("#current-player");
+    const entryPlayerName = document.querySelector("#entry-player-name");
 
     // ============================================================
     // GAME STATE
@@ -52,6 +53,13 @@ function DisplayController() {
 
         gameController = GameController(player1, player2);
         playerCreationModal.close();
+
+        const player1DisplayName = document.querySelector("#player1-display-name");
+        const player2DisplayName = document.querySelector("#player2-display-name");
+
+        player1DisplayName.textContent = player2Name + "'s fleet";
+        player2DisplayName.textContent = player1Name + "'s fleet";
+
         placeShips(player1);
     }
 
@@ -62,7 +70,7 @@ function DisplayController() {
     function placeShips(player) {
         currentPlacementPlayer = player;
         currentShipIndex = 0;
-
+        entryPlayerName.textContent = currentPlacementPlayer.name;
         showCurrentShip();
     }
 
@@ -80,17 +88,15 @@ function DisplayController() {
     function showShipDetails(player, shipName, length) {
         shipPlacementModal.showModal();
 
-        const playerName = document.querySelector("#entry-player-name");
+        document.querySelector("#entry-player-name").textContent = player.name;
 
-        const shipNameInput = document.querySelector("#ship-name");
+        document.querySelector("#ship-name").value = shipName;
 
-        const shipLengthInput = document.querySelector("#ship-length");
+        document.querySelector("#ship-length").value = length;
 
-        playerName.textContent = player.name;
+        document.querySelector("#ship-start-x").value = 0;
 
-        shipNameInput.value = shipName;
-
-        shipLengthInput.value = length;
+        document.querySelector("#ship-start-y").value = 0;
     }
 
     // Read the values entered into the ship-placement form.
@@ -152,7 +158,6 @@ function DisplayController() {
             destroyer: 2,
         };
     }
-
 
     // After a player has placed all of their ships,
     // either start the second player's placement phase
@@ -254,7 +259,7 @@ function DisplayController() {
         // after five seconds.
         setTimeout(() => {
             errorModal.close();
-        }, 5000);
+        }, 2000);
     }
 
     // ============================================================
@@ -298,6 +303,15 @@ function DisplayController() {
         const y = Number(cell.dataset.column);
 
         try {
+            // The board a cell lives on belongs to a fixed player
+            // (cellsG1 -> player1, cellsG2 -> player2, set up in
+            // attachCellEventListeners). A player may only attack
+            // from their own board.
+            if (player !== currentPlayer) {
+                showError("You cannot attack your own fleet");
+                return;
+            }
+
             // Tell the game controller that the current
             // player is attempting to attack this coordinate.
             gameController.playRound([x, y]);
@@ -314,11 +328,10 @@ function DisplayController() {
             if (currentPlayer.hasWon()) {
                 setTimeout(() => {
                     declareWinner();
-                }, 5000);
+                }, 2000);
             } else {
                 // If nobody has won, switch to the other player.
                 gameController.shiftTurn();
-
                 updateCurrentPlayer();
             }
         } catch (e) {
@@ -347,7 +360,7 @@ function DisplayController() {
     // whose turn it currently is.
     function updateCurrentPlayer() {
         currentPlayer = gameController.getCurrentPlayer();
-        currentPlayerName.textContent = currentPlayer.getName();
+        currentPlayerName.textContent = currentPlayer.name;
     }
 
     // ============================================================
@@ -357,11 +370,11 @@ function DisplayController() {
     function declareWinner() {
         const winnerModal = document.querySelector("#winner-modal");
 
-        const winnerMessageField = document.querySelector("#error-modal p");
+        const winnerMessageField = document.querySelector("#winner-modal p");
 
         winnerModal.showModal();
 
-        winnerMessageField.textContent = `${currentPlayer.getName()}`;
+        winnerMessageField.textContent = `${currentPlayer.name} wins!`;
     }
 
     // ============================================================
@@ -369,7 +382,11 @@ function DisplayController() {
     // ============================================================
 
     function startGame() {
-        playerCreationModal.show();
+        // Fixed: .show() opens a non-modal dialog with no backdrop and
+        // keeps it out of the browser's top layer, which let page content
+        // (board panels, animated pseudo-elements) paint over/through it.
+        // .showModal() is what every other dialog in this file already uses.
+        playerCreationModal.showModal();
     }
 
     // Only expose functions that need to be called
