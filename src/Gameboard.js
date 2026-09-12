@@ -23,9 +23,7 @@ function Gameboard() {
     const missedAttacks = [];
 
     function placeShip(length, start, orientation) {
-        if (!isValidPlacement(length, start, orientation)) {
-            throw new Error("Invalid placement: Ship is being placed out of bounds");
-        }
+        isValidPlacement(length, start, orientation);
 
         const ship = Ship(length);
         const [x, y] = start;
@@ -53,14 +51,22 @@ function Gameboard() {
 
         if (orientation === "horizontal") {
             for (let j = y; j < y + length; j++) {
-                if (!isInsideBoard(x, j) || board[x][j] === 1) {
-                    return false;
+                if (!isInsideBoard(x, j)) {
+                    throw new Error("Invalid placement: Ship is out of bounds");
+                }
+
+                if (board[x][j] === 1) {
+                    throw new Error("Invalid placement: Ship is overlapping another ship");
                 }
             }
         } else {
             for (let i = x; i < x + length; i++) {
-                if (!isInsideBoard(i, y) || board[i][y] === 1) {
-                    return false;
+                if (!isInsideBoard(i, y)) {
+                    throw new Error("Invalid placement: Ship is out of bounds");
+                }
+
+                if (board[i][y] === 1) {
+                    throw new Error("Invalid placement: Ship is overlapping another ship");
                 }
             }
         }
