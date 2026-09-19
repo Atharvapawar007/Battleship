@@ -328,7 +328,7 @@ function DisplayController() {
             if (currentPlayer.hasWon()) {
                 setTimeout(() => {
                     declareWinner();
-                }, 2000);
+                }, 1000);
             } else {
                 // If nobody has won, switch to the other player.
                 gameController.shiftTurn();
